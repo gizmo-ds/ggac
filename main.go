@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"log"
+	"os"
 )
 
 var (
@@ -10,17 +12,34 @@ var (
 )
 
 func init() {
+
 	log.SetFlags(log.Lshortfile | log.LstdFlags)
+
+	for i := 1; i < len(os.Args); i++ {
+		switch os.Args[i] {
+		case "c": // config
+			if len(os.Args) < i+1 {
+				fmt.Println("参数错误")
+				return
+			}
+			_config_path = os.Args[i+1]
+
+		case "u": // user-list
+			if len(os.Args) < i+1 {
+				fmt.Println("参数错误")
+				return
+			}
+			_users_path = os.Args[i+1]
+
+		case "h": // help
+			fmt.Println(`xD`)
+		}
+	}
+
 	reload_config(_config_path)
 	reload_users(_users_path)
-
-	api.init()
 }
 
 func main() {
-	user_uuid := get_user_uuid("cunyu")
-	if user_uuid == "nil" {
-		return
-	}
-	log.Println(get_user_code(user_uuid, "test1"))
+	api.init()
 }
